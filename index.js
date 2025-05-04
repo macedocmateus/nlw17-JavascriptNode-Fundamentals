@@ -1,16 +1,20 @@
-// Criador de Metas //
+const start = () => {
+    while (true) {
+        let option = "sair";
+        switch (option) {
+            case "cadastrar":
+                break;
 
-let meta = {
-    value: "Ler um livro por mês",
-    checked: true,
+            case "listar":
+                break;
+
+            case "sair":
+                break;
+
+            default:
+                break;
+        }
+    }
 };
 
-let metas = [
-    meta,
-    {
-        value: "Fazer exercícios",
-        checked: false,
-    },
-];
-
-console.log(metas[1].value);
+start();
