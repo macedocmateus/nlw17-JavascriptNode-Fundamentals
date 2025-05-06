@@ -209,6 +209,7 @@ const start = async () => {
             case "abertas":
                 await metasAbertas();
                 break;
+
             case "deletar":
                 await deletarMetas();
                 break;
