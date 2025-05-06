@@ -1,4 +1,4 @@
-import { select, input, checkbox } from "@inquirer/prompts";
+import { select, input, checkbox, confirm } from "@inquirer/prompts";
 
 import fs from "node:fs/promises";
 
@@ -23,7 +23,17 @@ const cadastrarMeta = async () => {
     const meta = await input({ message: "Digite a meta" });
 
     if (meta.length == 0) {
-        mensagem = "A meta não pode ser vazia";
+        mensagem = "A meta não pode ser vazia!";
+        return;
+    }
+
+    const confirmar = await confirm({
+        message: "Você deseja cadastrar essa meta ?",
+        default: true,
+    });
+
+    if (!confirmar) {
+        mensagem = "O cadastro da meta foi cancelado pelo usuário";
         return;
     }
 
@@ -114,6 +124,54 @@ const metasAbertas = async () => {
     });
 };
 
+const atualizarMeta = async () => {
+    if (metas.length == 0) {
+        mensagem = "Nenhuma meta foi cadastrada!";
+        return;
+    }
+
+    const metasParaAtualizar = metas.map((meta) => {
+        return { value: meta.value, checked: false };
+    });
+
+    const metaParaAtualizar = await select({
+        message: "Selecione uma meta para atualizar!",
+        choices: [...metasParaAtualizar],
+    });
+
+    if (!metaParaAtualizar) {
+        mensagem = "Nenhum item selecionado!";
+        return;
+    }
+
+    const novaMeta = await input({ message: "Digite a nova meta!" });
+
+    if (novaMeta.length == 0) {
+        mensagem = "O nome da meta não pode ser vazio!";
+        return;
+    }
+
+    const confirmar = await confirm({
+        message: "Você deseja atualizar esta meta ?",
+
+        default: true,
+    });
+
+    if (!confirmar) {
+        mensagem = "A atualização da meta foi cancelada pelo usuário";
+        return;
+    }
+
+    metas = metas.map((meta) => {
+        if (meta.value == metaParaAtualizar) {
+            return { value: novaMeta, checked: false };
+        }
+        return meta;
+    });
+
+    mensagem = "Meta atualizada com sucesso!";
+};
+
 const deletarMetas = async () => {
     if (metas.length == 0) {
         mensagem = "Nenhuma meta foi cadastrada!";
@@ -132,7 +190,18 @@ const deletarMetas = async () => {
     });
 
     if (itemsADeletar.length == 0) {
-        mensagem = "Nenhum item para deletar!";
+        mensagem = "Nenhuma meta para deletar!";
+        return;
+    }
+
+    const confirmar = await confirm({
+        message: "Você deseja deletar esta(s) meta(s) ?",
+        default: true,
+    });
+
+    if (!confirmar) {
+        mensagem =
+            "A exclusão da(s) meta(s) foi(foram) cancelada(s) pelo usuário";
         return;
     }
 
@@ -183,6 +252,11 @@ const start = async () => {
                 },
 
                 {
+                    name: "Atualizar meta",
+                    value: "atualizar",
+                },
+
+                {
                     name: "Deletar metas",
                     value: "deletar",
                 },
@@ -208,6 +282,10 @@ const start = async () => {
 
             case "abertas":
                 await metasAbertas();
+                break;
+
+            case "atualizar":
+                await atualizarMeta();
                 break;
 
             case "deletar":

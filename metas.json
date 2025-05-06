@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "value": "Fazer Almoço especial",
+    "checked": false
+  },
+  {
+    "value": "Comprar talheres",
+    "checked": true
+  },
+  {
+    "value": "Ir ao supermercado",
+    "checked": false
+  }
+]
